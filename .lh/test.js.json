@@ -1,0 +1,18 @@
+{
+    "sourceFile": "test.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1753855875037,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1753855875036,
+            "name": "Commit-0",
+            "content": "//디코PR 테스트\r\n"
+        }
+    ]
+}
