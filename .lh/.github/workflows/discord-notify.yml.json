@@ -1,0 +1,18 @@
+{
+    "sourceFile": ".github/workflows/discord-notify.yml",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1753856237910,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1753856237910,
+            "name": "Commit-0",
+            "content": "name: Discord 알림\r\n\r\non:\r\n  pull_request:\r\n    types: [opened, synchronize, closed, reopened, ready_for_review]\r\n  push:\r\n    branches: [main, develop]\r\n\r\njobs:\r\n  discord-notify:\r\n    runs-on: ubuntu-latest\r\n    steps:\r\n      - name: Discord 알림 전송\r\n        run: |\r\n          # Discord Webhook URL (GitHub Secrets에서 가져옴)\r\n          DISCORD_WEBHOOK_URL=\"${{ secrets.DISCORD_WEBHOOK_URL }}\"\r\n\r\n          # 이벤트 타입에 따라 메시지 구성\r\n          if [ \"${{ github.event_name }}\" = \"pull_request\" ]; then\r\n            # PR 이벤트\r\n            ACTION=\"${{ github.event.action }}\"\r\n            PR_TITLE=\"${{ github.event.pull_request.title }}\"\r\n            PR_URL=\"${{ github.event.pull_request.html_url }}\"\r\n            AUTHOR=\"${{ github.event.pull_request.user.login }}\"\r\n            REPO=\"${{ github.repository }}\"\r\n            \r\n            case $ACTION in\r\n              \"opened\")\r\n                MESSAGE=\"🔔 **새로운 PR이 생성되었습니다!**\\n\\n📁 **저장소:** $REPO\\n🙋 **작성자:** $AUTHOR\\n📝 **제목:** $PR_TITLE\\n🔗 **링크:** $PR_URL\"\r\n                ;;\r\n              \"closed\")\r\n                if [ \"${{ github.event.pull_request.merged }}\" = \"true\" ]; then\r\n                  MESSAGE=\"✅ **PR이 머지되었습니다!**\\n\\n📁 **저장소:** $REPO\\n🙋 **작성자:** $AUTHOR\\n📝 **제목:** $PR_TITLE\\n🔗 **링크:** $PR_URL\"\r\n                else\r\n                  MESSAGE=\"❌ **PR이 닫혔습니다!**\\n\\n📁 **저장소:** $REPO\\n🙋 **작성자:** $AUTHOR\\n📝 **제목:** $PR_TITLE\\n🔗 **링크:** $PR_URL\"\r\n                fi\r\n                ;;\r\n              \"reopened\")\r\n                MESSAGE=\"🔄 **PR이 다시 열렸습니다!**\\n\\n📁 **저장소:** $REPO\\n🙋 **작성자:** $AUTHOR\\n📝 **제목:** $PR_TITLE\\n🔗 **링크:** $PR_URL\"\r\n                ;;\r\n              *)\r\n                MESSAGE=\"📝 **PR이 업데이트되었습니다!**\\n\\n📁 **저장소:** $REPO\\n🙋 **작성자:** $AUTHOR\\n📝 **제목:** $PR_TITLE\\n🔗 **링크:** $PR_URL\"\r\n                ;;\r\n            esac\r\n          else\r\n            # Push 이벤트\r\n            COMMIT_MESSAGE=\"${{ github.event.head_commit.message }}\"\r\n            COMMIT_URL=\"${{ github.event.head_commit.url }}\"\r\n            AUTHOR=\"${{ github.event.head_commit.author.name }}\"\r\n            REPO=\"${{ github.repository }}\"\r\n            BRANCH=\"${{ github.ref_name }}\"\r\n            \r\n            MESSAGE=\"🚀 **새로운 커밋이 푸시되었습니다!**\\n\\n📁 **저장소:** $REPO\\n🌿 **브랜치:** $BRANCH\\n🙋 **작성자:** $AUTHOR\\n📝 **커밋 메시지:** $COMMIT_MESSAGE\\n🔗 **링크:** $COMMIT_URL\"\r\n          fi\r\n\r\n          # Discord로 메시지 전송\r\n          curl -H \"Content-Type: application/json\" \\\r\n               -X POST \\\r\n               -d \"{\\\"content\\\":\\\"$MESSAGE\\\"}\" \\\r\n               \"$DISCORD_WEBHOOK_URL\"\r\n"
+        }
+    ]
+}
